@@ -1,7 +1,7 @@
-package br.com.santander.test;
+package br.com.santander.liferay.test;
 
-import br.com.santander.dao.ClienteDAO;
-import br.com.santander.model.Cliente;
+import br.com.santander.liferay.dao.ClienteDAO;
+import br.com.santander.liferay.model.Cliente;
 
 public class ClienteTest {
 

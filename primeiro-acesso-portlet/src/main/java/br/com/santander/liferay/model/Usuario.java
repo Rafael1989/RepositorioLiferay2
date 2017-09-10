@@ -1,4 +1,4 @@
-package br.com.santander.model;
+package br.com.santander.liferay.model;
 
 public class Usuario {
 

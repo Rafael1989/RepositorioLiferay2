@@ -9,11 +9,23 @@ import javax.portlet.ResourceResponse;
 
 import org.json.JSONObject;
 
-import br.com.santander.dao.ClienteDAO;
-import br.com.santander.dao.UsuarioDAO;
-import br.com.santander.model.Cliente;
-import br.com.santander.model.Usuario;
+import br.com.santander.liferay.dao.ClienteDAO;
+import br.com.santander.liferay.dao.UsuarioDAO;
+import br.com.santander.liferay.model.Cliente;
+import br.com.santander.liferay.model.Usuario;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 public class PrimeiroAcessoController extends MVCPortlet{
@@ -42,16 +54,30 @@ public class PrimeiroAcessoController extends MVCPortlet{
 	}
 	
 	private JSONObject fazerPrimeiroAcesso(ResourceRequest resourceRequest,
-			JSONObject jsonObject) {
+			JSONObject jsonObject) throws NumberFormatException, PortalException, SystemException {
 		String cpf = resourceRequest.getParameter("cpf");
 		String login = resourceRequest.getParameter("login");
 		String senha = resourceRequest.getParameter("senha");
+		String nome = resourceRequest.getParameter("nome");
+		String primeiroSobrenome = resourceRequest.getParameter("primeiroSobrenome");
+		String ultimoSobrenome = resourceRequest.getParameter("ultimoSobrenome");
+		String email = resourceRequest.getParameter("email");
+		String sexo = resourceRequest.getParameter("sexo");
+		String dataNascimento = "21/07/1989";
+		String[] dataNascimentoArray = dataNascimento.split("/");
 		Usuario usuario = new Usuario();
 		usuario.setCpf(cpf);
 		usuario.setLogin(login);
 		usuario.setSenha(senha);
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		usuarioDAO.adiciona(usuario);
+		User user = UserLocalServiceUtil.addUser(0, CompanyThreadLocal.getCompanyId(), false, senha, senha, false, login, login+"@hotmail.com", 0, StringPool.BLANK, LocaleUtil.getDefault()
+				, "Rafael", "", "", 0, 0, true, Integer.parseInt(dataNascimentoArray[1]), Integer.parseInt(dataNascimentoArray[0]), 
+				Integer.parseInt(dataNascimentoArray[2]), StringPool.BLANK, null, null, null, null, false, new ServiceContext());
+		ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		Group group = themeDisplay.getLayout().getGroup();
+		UserLocalServiceUtil.addGroupUser(group.getGroupId(),user);
+		//UserLocalServiceUtil.addOrganizationUser(group.getOrganizationId(), user.getUserId());
 		jsonObject.put("mensagem", "Login cadastrado com sucesso.");
 		return jsonObject;
 	}

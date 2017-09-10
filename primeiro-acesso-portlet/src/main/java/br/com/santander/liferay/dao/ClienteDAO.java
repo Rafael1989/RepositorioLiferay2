@@ -1,11 +1,11 @@
-package br.com.santander.dao;
+package br.com.santander.liferay.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.com.santander.model.Cliente;
+import br.com.santander.liferay.model.Cliente;
 
 public class ClienteDAO {
 	

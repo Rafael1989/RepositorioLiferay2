@@ -1,6 +1,6 @@
-package br.com.santander.test;
+package br.com.santander.liferay.test;
 
-import br.com.santander.dao.ConnectionFactory;
+import br.com.santander.liferay.dao.ConnectionFactory;
 
 public class ConnectionFactoryTest {
 	

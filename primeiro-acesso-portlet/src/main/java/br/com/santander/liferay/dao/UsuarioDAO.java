@@ -1,11 +1,11 @@
-package br.com.santander.dao;
+package br.com.santander.liferay.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.com.santander.model.Usuario;
+import br.com.santander.liferay.model.Usuario;
 
 public class UsuarioDAO {
 	
@@ -47,6 +47,22 @@ public class UsuarioDAO {
 			throw new RuntimeException(e);
 		}
 		return usuario;
+	}
+	
+	public boolean verificaLogin(Usuario usuario){
+		try{
+			String sql = "select * from usuario where login = ? and senha = ?";
+			PreparedStatement stmt = this.connection.prepareStatement(sql);
+			stmt.setString(1, usuario.getLogin());
+			stmt.setString(2, usuario.getSenha());
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()){
+				return true;
+			}
+		}catch(SQLException e){
+			throw new RuntimeException(e);
+		}
+		return false;
 	}
 
 }

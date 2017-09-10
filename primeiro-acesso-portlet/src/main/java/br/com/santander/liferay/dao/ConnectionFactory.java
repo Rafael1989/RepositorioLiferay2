@@ -1,4 +1,4 @@
-package br.com.santander.dao;
+package br.com.santander.liferay.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
