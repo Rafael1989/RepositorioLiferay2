@@ -20,6 +20,7 @@
 function inicio(){
 	$('#divCpf').show();
 	$('#divLogin').hide();
+	$('#dataNascimento').mask('00/00/0000');
 }
 
 function validarCpf(){
@@ -55,29 +56,59 @@ function validarCpf(){
 
 function fazerPrimeiroAcesso(){
 	var cpf = $('#cpf').val();
-	var login = $('#login').val();
 	var senha = $('#senha').val();
-	if(login == ''){
-		alert('Favor informar o login que deseja para acessar o sistema.');
-		return false;	
-	}
+	var primeiroNome = $('#primeiroNome').val();
+	var nomeDoMeio = $('#nomeDoMeio').val();
+	var ultimoNome = $('#ultimoNome').val();
+	var email = $('#email').val();
+	var dataNascimento = $('#dataNascimento').val();
 	if(senha == ''){
 		alert('Favor informar a senha que deseja para acessar o sistema.');
 		return false;
 	}
+	if(primeiroNome == ''){
+		alert('Favor informar o primeiro nome.');
+		return false;
+	}
+	if(email == ''){
+		alert('Favor informar o email.');
+		return false;
+	}
+	if(!$('#masculino').is(':checked') && !$('#feminino').is(':checked')){
+		alert('Favor informar o sexo.');
+		return false;
+	}
+	if(dataNascimento == ''){
+		alert('Favor informar a data de nascimento.');
+		return false;
+	}
+	var sexo;
+	if($('#masculino').is(':checked')){
+		sexo = $('#masculino').val();
+	}else{
+		sexo = $('#feminino').val();
+	}
 	$.ajax({
 		url:'${fazerPrimeiroAcessoUrl}',
 		data:{'<portlet:namespace/>cpf':cpf,
-			'<portlet:namespace/>login':login,
 			'<portlet:namespace/>senha':senha,
+			'<portlet:namespace/>primeiroNome':primeiroNome,
+			'<portlet:namespace/>nomeDoMeio':nomeDoMeio,
+			'<portlet:namespace/>ultimoNome':ultimoNome,
+			'<portlet:namespace/>email':email,
+			'<portlet:namespace/>sexo':sexo,
+			'<portlet:namespace/>dataNascimento':dataNascimento,
 			'<portlet:namespace/>metodo':'fazerPrimeiroAcesso'},
 		type:'post',
 		datatype:'json',
 		success:function(data){
-			$('#cpf').val('');
-			$('#login').val('');
-			$('#senha').val('');
-			alert(data['mensagem']);
+			if(data['status'] == 'sucesso'){
+				$('#divCpf').show();
+				$('#divLogin').hide();
+				alert(data['mensagem']);	
+			}else{
+				alert('Sistema indisponível, favor tentar mais tarde.');	
+			}
 		}
 	});	
 }

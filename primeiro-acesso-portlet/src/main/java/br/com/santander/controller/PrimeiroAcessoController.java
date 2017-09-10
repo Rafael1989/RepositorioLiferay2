@@ -56,28 +56,27 @@ public class PrimeiroAcessoController extends MVCPortlet{
 	private JSONObject fazerPrimeiroAcesso(ResourceRequest resourceRequest,
 			JSONObject jsonObject) throws NumberFormatException, PortalException, SystemException {
 		String cpf = resourceRequest.getParameter("cpf");
-		String login = resourceRequest.getParameter("login");
 		String senha = resourceRequest.getParameter("senha");
-		String nome = resourceRequest.getParameter("nome");
-		String primeiroSobrenome = resourceRequest.getParameter("primeiroSobrenome");
-		String ultimoSobrenome = resourceRequest.getParameter("ultimoSobrenome");
+		String primeiroNome = resourceRequest.getParameter("primeiroNome");
+		String[] primeiroNomeArray = primeiroNome.split(" ");
+		String nomeDoMeio = resourceRequest.getParameter("nomeDoMeio");
+		String ultimoNome = resourceRequest.getParameter("ultimoNome");
 		String email = resourceRequest.getParameter("email");
 		String sexo = resourceRequest.getParameter("sexo");
-		String dataNascimento = "21/07/1989";
+		String dataNascimento = resourceRequest.getParameter("dataNascimento");
 		String[] dataNascimentoArray = dataNascimento.split("/");
 		Usuario usuario = new Usuario();
 		usuario.setCpf(cpf);
-		usuario.setLogin(login);
+		usuario.setLogin(email);
 		usuario.setSenha(senha);
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		usuarioDAO.adiciona(usuario);
-		User user = UserLocalServiceUtil.addUser(0, CompanyThreadLocal.getCompanyId(), false, senha, senha, false, login, login+"@hotmail.com", 0, StringPool.BLANK, LocaleUtil.getDefault()
-				, "Rafael", "", "", 0, 0, true, Integer.parseInt(dataNascimentoArray[1]), Integer.parseInt(dataNascimentoArray[0]), 
+		User user = UserLocalServiceUtil.addUser(0, CompanyThreadLocal.getCompanyId(), false, senha, senha, false, primeiroNomeArray[0], email, 0, StringPool.BLANK, LocaleUtil.getDefault()
+				, primeiroNome, nomeDoMeio, ultimoNome, 0, 0, Validator.equals(sexo, "masculino"), Integer.parseInt(dataNascimentoArray[1])-1, Integer.parseInt(dataNascimentoArray[0]), 
 				Integer.parseInt(dataNascimentoArray[2]), StringPool.BLANK, null, null, null, null, false, new ServiceContext());
 		ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		Group group = themeDisplay.getLayout().getGroup();
 		UserLocalServiceUtil.addGroupUser(group.getGroupId(),user);
-		//UserLocalServiceUtil.addOrganizationUser(group.getOrganizationId(), user.getUserId());
 		jsonObject.put("mensagem", "Login cadastrado com sucesso.");
 		return jsonObject;
 	}
